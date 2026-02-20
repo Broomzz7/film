@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>ULTIMATE SYSTEM BREACH</title>
+
+<style>
+body{
+    margin:0;
+    background:black;
+    color:#00ff00;
+    font-family: monospace;
+    overflow:hidden;
+}
+
+#screen{
+    position:relative;
+    padding:12px;
+    white-space:pre-line;
+    font-size:13px;
+    z-index:2;
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:1;
+}
+
+.flash{
+    animation: flash 0.12s infinite;
+}
+
+@keyframes flash{
+    50%{background:#550000;}
+}
+
+.big{
+    font-size:32px;
+    text-align:center;
+    margin-top:30vh;
+    animation: blink 0.7s infinite;
+}
+
+@keyframes blink{
+    50%{opacity:0;}
+}
+</style>
+</head>
+
+<body onclick="start()">
+
+<canvas id="matrix"></canvas>
+<div id="screen">👉 TAP LAYAR UNTUK MULAI</div>
+
+<script>
+let box=document.getElementById("screen");
+let started=false;
+
+/* ========= MATRIX RAIN ========= */
+let c=document.getElementById("matrix");
+let ctx=c.getContext("2d");
+c.height=innerHeight;
+c.width=innerWidth;
+
+let letters="01#$%&@";
+let fontSize=14;
+let columns=c.width/fontSize;
+let drops=[];
+for(let x=0;x<columns;x++) drops[x]=1;
+
+function draw(){
+    ctx.fillStyle="rgba(0,0,0,0.05)";
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle="#0F0";
+    ctx.font=fontSize+"px monospace";
+
+    for(let i=0;i<drops.length;i++){
+        let text=letters[Math.floor(Math.random()*letters.length)];
+        ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+        if(drops[i]*fontSize>c.height&&Math.random()>0.975) drops[i]=0;
+        drops[i]++;
+    }
+}
+setInterval(draw,35);
+
+/* ========= SOUND ========= */
+function beep(freq=800,time=40){
+    let ctx=new (window.AudioContext||window.webkitAudioContext)();
+    let o=ctx.createOscillator();
+    o.frequency.value=freq;
+    o.connect(ctx.destination);
+    o.start();
+    setTimeout(()=>o.stop(),time);
+}
+
+function alarm(){
+    beep(200,300);
+}
+
+/* ========= UTIL ========= */
+function vibrate(v){
+    if(navigator.vibrate) navigator.vibrate(v);
+}
+
+function full(){
+    document.documentElement.requestFullscreen?.();
+}
+
+function type(text,delay=18){
+    return new Promise(res=>{
+        let i=0;
+        function t(){
+            if(i<text.length){
+                box.innerHTML+=text[i];
+                if(text[i]!=" "&&text[i]!="\n") beep();
+                i++;
+                setTimeout(t,delay);
+            }else res();
+        }
+        t();
+    });
+}
+
+/* ========= MAIN ========= */
+async function start(){
+if(started) return;
+started=true;
+
+full();
+box.innerHTML="";
+
+await type("SYSTEM BOOTING...\n");
+await type("BYPASSING FIREWALL...\n");
+await type("ROOT ACCESS GRANTED\n\n");
+
+await type("Scanning device...\n");
+await type("Virus found x99 !!!\n");
+
+vibrate(400);
+
+await type("Deleting gallery...\nDeleting WhatsApp...\nDeleting PUBG...\nDeleting MLBB...\n\n");
+
+document.body.classList.add("flash");
+alarm();
+
+for(let i=5;i>=0;i--){
+    box.innerHTML+="DEVICE LOCK IN "+i+"...\n";
+    vibrate(200);
+    await new Promise(r=>setTimeout(r,600));
+}
+
+document.body.classList.remove("flash");
+
+await type("\nPASSWORD REQUIRED:\n********\nACCESS DENIED\n\n");
+
+await type("TRACKING LOCATION...\nLat: -6.xxxx\nLon: 107.xxxx\n\n");
+
+await type("ACCESSING CAMERA...\n");
+
+/* fake camera */
+try{
+    await navigator.mediaDevices.getUserMedia({video:true});
+    await type("Camera connected ✓\n\n");
+}catch{
+    await type("Camera blocked\n\n");
+}
+
+await type("UPLOADING DATA TO SERVER...\n");
+
+for(let p=0;p<=100;p+=10){
+    box.innerHTML+="["+ "█".repeat(p/10)+" ".repeat(10-p/10)+"] "+p+"%\n";
+    beep(1000,60);
+    await new Promise(r=>setTimeout(r,250));
+}
+
+await new Promise(r=>setTimeout(r,600));
+
+/* ENDING */
+box.innerHTML=`
+<div class="big">
+🤣 PRANK DOANG 🤣<br>
+TENANG BRO<br>
+HP AMAN 100%<br><br>
+ULTIMATE EDITION
+</div>`;
+}
+</script>
+
+</body>
+</html>
